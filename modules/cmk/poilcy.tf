@@ -1,3 +1,10 @@
+locals {
+  statements = [for statement in var.statements : defaults(statement, {
+    principals = {}
+    conditions = {}
+  })]
+}
+
 data "aws_iam_policy_document" "this" {
   statement {
     sid     = "EnableUserPermissions"
@@ -105,6 +112,31 @@ data "aws_iam_policy_document" "this" {
       test     = "Bool"
       variable = "kms:GrantIsForAWSResource"
       values   = ["true"]
+    }
+  }
+
+  dynamic "statement" {
+    for_each = toset(local.statements)
+    content {
+      effect    = statement.value.effect
+      actions   = statement.value.actions
+      resources = statement.value.resources
+
+      dynamic "principals" {
+        for_each = statement.value.principals
+        content {
+          type        = principals.value.type
+          identifiers = principals.value.identifiers
+        }
+      }
+      dynamic "condition" {
+        for_each = statement.value.conditions
+        content {
+          test     = condition.value.test
+          variable = condition.value.variable
+          values   = condition.value.values
+        }
+      }
     }
   }
 }

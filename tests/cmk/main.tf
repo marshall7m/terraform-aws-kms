@@ -34,4 +34,31 @@ module "mut_cmk" {
       ]
     }
   ]
+
+  statements = [
+    {
+      sid = "AliasCreation"
+      effect = "Allow"
+      principals = [
+        {
+          type = "AWS"
+          identifiers = ["*"]
+        }
+      ]
+      actions = ["kms:CreateAlias"]
+      resources = ["*"]
+      conditions = [
+        {
+          test = "StringEquals"
+          variable = "kms:ViaService"
+          values = ["ec2.region.amazonaws.com"]
+        },
+        {
+          test = "StringEquals"
+          variable = "kms:CallerAccount"
+          values = [var.account_id]
+        }
+      ]
+    }
+  ]
 }

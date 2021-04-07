@@ -87,3 +87,22 @@ variable "trusted_service_usage_conditions" {
   }))
   default = []
 }
+
+variable "statements" {
+  description = "IAM policy statements for cmk"
+  type = list(object({
+    sid       = optional(string)
+    effect    = string
+    actions   = list(string)
+    resources = list(string)
+    principals = optional(list(object({
+      type        = string
+      identifiers = list(string)
+    })))
+    conditions = optional(list(object({
+      test     = string
+      variable = string
+      values   = list(string)
+    })))
+  }))
+}
