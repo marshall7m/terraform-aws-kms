@@ -70,7 +70,7 @@ data "aws_iam_policy_document" "this" {
   }
 
   dynamic "statement" {
-    for_each = var.trusted_user_usage_arns != [] ? [1] : []
+    for_each = length(var.trusted_user_usage_arns) > 0 ? [1] : []
     content {
       sid    = "UserUsagePermissions"
       effect = "Allow"
@@ -97,7 +97,7 @@ data "aws_iam_policy_document" "this" {
     }
   }
   dynamic "statement" {
-    for_each = var.trusted_user_usage_arns != [] ? [1] : []
+    for_each = length(var.trusted_user_usage_arns) > 0 ? [1] : []
     content {
       sid    = "GrantPermissions"
       effect = "Allow"
