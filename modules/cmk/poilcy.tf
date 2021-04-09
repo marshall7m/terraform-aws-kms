@@ -69,27 +69,30 @@ data "aws_iam_policy_document" "this" {
     }
   }
 
-  statement {
-    sid    = "UserUsagePermissions"
-    effect = "Allow"
-    actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey"
-    ]
-    principals {
-      type        = "AWS"
-      identifiers = var.trusted_user_usage_arns
-    }
-    resources = ["*"]
-    dynamic "condition" {
-      for_each = var.trusted_user_usage_conditions
-      content {
-        test     = condition.value.test
-        variable = condition.value.variable
-        values   = condition.value.values
+  dynamic "statement" {
+    for_each = var.trusted_user_usage_arns != [] ? [1] : []
+    content {
+      sid    = "UserUsagePermissions"
+      effect = "Allow"
+      actions = [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ]
+      principals {
+        type        = "AWS"
+        identifiers = var.trusted_user_usage_arns
+      }
+      resources = ["*"]
+      dynamic "condition" {
+        for_each = var.trusted_user_usage_conditions
+        content {
+          test     = condition.value.test
+          variable = condition.value.variable
+          values   = condition.value.values
+        }
       }
     }
   }
