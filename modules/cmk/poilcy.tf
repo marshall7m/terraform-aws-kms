@@ -96,25 +96,27 @@ data "aws_iam_policy_document" "this" {
       }
     }
   }
+  dynamic "statement" {
+    for_each = var.trusted_user_usage_arns != [] ? [1] : []
+    content {
+      sid    = "GrantPermissions"
+      effect = "Allow"
+      actions = [
+        "kms:CreateGrant",
+        "kms:ListGrants",
+        "kms:RevokeGrant"
+      ]
+      principals {
+        type        = "AWS"
+        identifiers = var.trusted_user_usage_arns
+      }
+      resources = ["*"]
 
-  statement {
-    sid    = "GrantPermissions"
-    effect = "Allow"
-    actions = [
-      "kms:CreateGrant",
-      "kms:ListGrants",
-      "kms:RevokeGrant"
-    ]
-    principals {
-      type        = "AWS"
-      identifiers = var.trusted_user_usage_arns
-    }
-    resources = ["*"]
-
-    condition {
-      test     = "Bool"
-      variable = "kms:GrantIsForAWSResource"
-      values   = ["true"]
+      condition {
+        test     = "Bool"
+        variable = "kms:GrantIsForAWSResource"
+        values   = ["true"]
+      }
     }
   }
 
