@@ -36,7 +36,7 @@ variable "is_enabled" {
 variable "enable_key_rotation" {
   description = "Determines if key rotation is enabled"
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "customer_master_key_spec" {

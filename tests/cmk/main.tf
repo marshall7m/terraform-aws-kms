@@ -37,26 +37,26 @@ module "mut_cmk" {
 
   statements = [
     {
-      sid = "AliasCreation"
+      sid    = "AliasCreation"
       effect = "Allow"
       principals = [
         {
-          type = "AWS"
+          type        = "AWS"
           identifiers = ["*"]
         }
       ]
-      actions = ["kms:CreateAlias"]
+      actions   = ["kms:CreateAlias"]
       resources = ["*"]
       conditions = [
         {
-          test = "StringEquals"
+          test     = "StringEquals"
           variable = "kms:ViaService"
-          values = ["ec2.region.amazonaws.com"]
+          values   = ["ec2.region.amazonaws.com"]
         },
         {
-          test = "StringEquals"
+          test     = "StringEquals"
           variable = "kms:CallerAccount"
-          values = [var.account_id]
+          values   = [var.account_id]
         }
       ]
     }

@@ -1,7 +1,9 @@
 output "arn" {
-  value = try(aws_kms_key.this[0].arn, null)
+  description = "AWS CMK ARN"
+  value       = try(aws_kms_key.this[0].arn, null)
 }
 
 output "id" {
-  value = try(aws_kms_key.this[0].key_id, null)
+  description = "Globally unique ID for CMK"
+  value       = try(aws_kms_key.this[0].key_id, null)
 }
