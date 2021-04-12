@@ -5,6 +5,8 @@ locals {
   })]
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "this" {
   statement {
     sid     = "EnableUserPermissions"
@@ -12,7 +14,7 @@ data "aws_iam_policy_document" "this" {
     actions = ["kms:*"]
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.account_id}:root"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.id}:root"]
     }
     resources = ["*"]
   }

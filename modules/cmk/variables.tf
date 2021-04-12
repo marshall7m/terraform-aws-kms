@@ -4,11 +4,6 @@ variable "create_key" {
   default     = true
 }
 
-variable "account_id" {
-  description = "AWS account ID used to define the root ARN that will have user permissions for the key"
-  type        = string
-}
-
 variable "alias" {
   description = "Alias to attach to key"
   type        = string
