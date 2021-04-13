@@ -125,6 +125,7 @@ data "aws_iam_policy_document" "this" {
   dynamic "statement" {
     for_each = toset(local.statements)
     content {
+      sid = statement.value.sid
       effect    = statement.value.effect
       actions   = statement.value.actions
       resources = statement.value.resources
