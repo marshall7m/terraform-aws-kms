@@ -45,28 +45,31 @@ data "aws_iam_policy_document" "this" {
     resources = ["*"]
   }
 
-  statement {
-    sid    = "ServiceUsagePermissions"
-    effect = "Allow"
-    actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey"
-    ]
-    principals {
-      type        = "Service"
-      identifiers = var.trusted_service_usage_principals
-    }
-    resources = ["*"]
+  dynamic "statement" {
+    for_each = length(var.trusted_service_usage_principals) > 0 ? [1] : []
+    content {
+      sid    = "ServiceUsagePermissions"
+      effect = "Allow"
+      actions = [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ]
+      principals {
+        type        = "Service"
+        identifiers = var.trusted_service_usage_principals
+      }
+      resources = ["*"]
 
-    dynamic "condition" {
-      for_each = var.trusted_service_usage_conditions
-      content {
-        test     = condition.value.test
-        variable = condition.value.variable
-        values   = condition.value.values
+      dynamic "condition" {
+        for_each = var.trusted_service_usage_conditions
+        content {
+          test     = condition.value.test
+          variable = condition.value.variable
+          values   = condition.value.values
+        }
       }
     }
   }
