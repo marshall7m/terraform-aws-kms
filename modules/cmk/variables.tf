@@ -100,4 +100,5 @@ variable "statements" {
       values   = list(string)
     })))
   }))
+  default = []
 }
